@@ -5,14 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Chapitre } from "@/types/Chapitre";
 
-type Props = {
-  params: {
-    id: number;
-  };
-};
-
-const Page = async({ params }: Props) => {
+const Page = async({ params }: {params:{id: number}}) => {
   const user = await currentUser();
+  const { id } = await params;
   return (
     <main>
       <h1>Welcome, {params.id}</h1>
