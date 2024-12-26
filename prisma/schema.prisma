@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  clerkUserId String     @unique
+  email       String     @unique
+  name        String?
+  imageUrl    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  todos       Todo[]
+  chapitres   Chapitre[]
+}
+
+model Todo {
+  id        Int      @id @default(autoincrement())
+  text      String
+  done      Boolean  @default(false)
+  // Relation to user
+  user      User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Chapitre {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String    @unique @db.VarChar(255)
+  content   String?
+  published Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: NoAction)
+  authorId  Int
+  articles  Article[]
+}
+
+model Article {
+  id         Int      @id @default(autoincrement())
+  title      String   @unique
+  content    String?
+  chapitre   Chapitre @relation(fields: [chapitreId], references: [id], onDelete: Cascade)
+  chapitreId Int
+  alineas    Alinea[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Alinea {
+  id        Int      @id @default(autoincrement())
+  title     String   @unique
+  content   String?
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
