@@ -7,6 +7,5 @@ export interface Chapitre {
     published: Date
     author: string
     authorId: number
-    articles: string[]
   }
   

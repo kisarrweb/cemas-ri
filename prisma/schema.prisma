@@ -45,15 +45,15 @@ model Chapitre {
   title     String    @unique @db.VarChar(255)
   content   String?
   published Boolean   @default(false)
-  author    User      @relation(fields: [authorId], references: [id], onDelete: NoAction)
-  authorId  Int
+  author    User      @relation(fields: [authorId], references: [clerkUserId], onDelete: NoAction)
+  authorId  String
   articles  Article[]
 }
 
 model Article {
   id         Int      @id @default(autoincrement())
   title      String   @unique
-  content    String?
+  content    String
   chapitre   Chapitre @relation(fields: [chapitreId], references: [id], onDelete: Cascade)
   chapitreId Int
   alineas    Alinea[]
